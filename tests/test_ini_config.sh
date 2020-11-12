@@ -196,11 +196,11 @@ for x in $del_cases; do
     inidelete ${SUDO_ARG} ${TEST_INI} $x a
     VAL=$(iniget_multiline ${TEST_INI} $x a)
     assert_empty VAL "inidelete $x"
-    if [ "$x" = "del_separate_options" -o \
-        "$x" = "del_missing_option" -o \
-        "$x" = "del_missing_option_multi" ]; then
+    if [ "$x" == "del_separate_options" -o \
+        "$x" == "del_missing_option" -o \
+        "$x" == "del_missing_option_multi" ]; then
         VAL=$(iniget_multiline ${TEST_INI} $x b)
-        if [ "$VAL" = "c" -o "$VAL" = "c d" ]; then
+        if [ "$VAL" == "c" -o "$VAL" == "c d" ]; then
             passed "inidelete other_options $x"
         else
             failed "inidelete other_option $x: $VAL"

@@ -125,7 +125,7 @@ function init_lvm_volume_group {
     local size=$2
 
     # Start the tgtd service on Fedora and SUSE if tgtadm is used
-    if  is_fedora || is_suse  && [[ "$CINDER_ISCSI_HELPER" = "tgtadm" ]]; then
+    if  is_fedora || is_suse  && [[ "$CINDER_ISCSI_HELPER" ==  "tgtadm" ]]; then
         start_service tgtd
     fi
 
@@ -133,7 +133,7 @@ function init_lvm_volume_group {
     _create_lvm_volume_group $vg $size
 
     # Remove iscsi targets
-    if [ "$CINDER_ISCSI_HELPER" = "lioadm" ]; then
+    if [ "$CINDER_ISCSI_HELPER" ==  "lioadm" ]; then
         sudo cinder-rtstool get-targets | sudo xargs -rn 1 cinder-rtstool delete
     else
         sudo tgtadm --op show --mode target | awk '/Target/ {print $3}' | sudo xargs -r -n1 tgt-admin --delete
@@ -153,7 +153,7 @@ _DEFAULT_LVM_INIT=${_DEFAULT_LVM_INIT:-0}
 #
 # Usage: init_default_lvm_volume_group()
 function init_default_lvm_volume_group {
-    if [[ "$_DEFAULT_LVM_INIT" = "0" ]]; then
+    if [[ "$_DEFAULT_LVM_INIT" ==  "0" ]]; then
         init_lvm_volume_group $DEFAULT_VOLUME_GROUP_NAME $VOLUME_BACKING_FILE_SIZE
         _DEFAULT_LVM_INIT=1
     fi
@@ -176,7 +176,7 @@ function clean_lvm_filter {
 # Usage: set_lvm_filter()
 function set_lvm_filter {
     local filter_suffix='"r|.*|" ]  # from devstack'
-    local filter_string="global_filter = [ "
+    local filter_string="global_filter ==  [ "
     local pv
     local vg
     local line
@@ -189,7 +189,7 @@ function set_lvm_filter {
     filter_string=$filter_string$filter_suffix
 
     clean_lvm_filter
-    sudo sed -i "/# global_filter = \[*\]/a\    $global_filter$filter_string" /etc/lvm/lvm.conf
+    sudo sed -i "/# global_filter ==  \[*\]/a\    $global_filter$filter_string" /etc/lvm/lvm.conf
     echo_summary "set lvm.conf device global_filter to: $filter_string"
 }
 

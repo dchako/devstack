@@ -14,11 +14,11 @@ function neutron_lb_cleanup {
     if [[ -z "$bridge_list" ]]; then
         return
     fi
-    if [[ "$Q_ML2_TENANT_NETWORK_TYPE" = "vxlan" ]]; then
+    if [[ "$Q_ML2_TENANT_NETWORK_TYPE" == "vxlan" ]]; then
         for port in $(echo $bridge_list | grep -o -e [a-zA-Z\-]*tap[0-9a-f\-]* -e vxlan-[0-9a-f\-]*); do
             sudo ip link delete $port
         done
-    elif [[ "$Q_ML2_TENANT_NETWORK_TYPE" = "vlan" ]]; then
+    elif [[ "$Q_ML2_TENANT_NETWORK_TYPE" == "vlan" ]]; then
         for port in $(echo $bridge_list | grep -o -e [a-zA-Z\-]*tap[0-9a-f\-]* -e ${LB_PHYSICAL_INTERFACE}\.[0-9a-f\-]*); do
             sudo ip link delete $port
         done

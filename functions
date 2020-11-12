@@ -137,7 +137,7 @@ function upload_image {
     image_fname=`basename "$image_url"`
     if [[ $image_url != file* ]]; then
         # Downloads the image (uec ami+akistyle), then extracts it.
-        if [[ ! -f $FILES/$image_fname || "$(stat -c "%s" $FILES/$image_fname)" = "0" ]]; then
+        if [[ ! -f $FILES/$image_fname || "$(stat -c "%s" $FILES/$image_fname)" == "0" ]]; then
             wget --progress=dot:giga -c $image_url -O $FILES/$image_fname
             if [[ $? -ne 0 ]]; then
                 echo "Not found: $image_url"
@@ -197,9 +197,9 @@ function upload_image {
 
         descriptor_data_pair_msg="Monolithic flat and VMFS disks "`
                                     `"should use a descriptor-data pair."
-        if [[ "$vmdk_create_type" = "monolithicSparse" ]]; then
+        if [[ "$vmdk_create_type" == "monolithicSparse" ]]; then
             vmdk_disktype="sparse"
-        elif [[ "$vmdk_create_type" = "monolithicFlat" || "$vmdk_create_type" = "vmfs" ]]; then
+        elif [[ "$vmdk_create_type" == "monolithicFlat" || "$vmdk_create_type" == "vmfs" ]]; then
             # Attempt to retrieve the ``*-flat.vmdk``
             local flat_fname
             flat_fname="$(head -25 $image | { grep -G 'RW\|RDONLY [0-9]+ FLAT\|VMFS' $image || true; })"
@@ -214,7 +214,7 @@ function upload_image {
                             `" Attempt to retrieve the *-flat.vmdk: $flat_url"
             if [[ $flat_url != file* ]]; then
                 if [[ ! -f $FILES/$flat_fname || \
-                "$(stat -c "%s" $FILES/$flat_fname)" = "0" ]]; then
+                "$(stat -c "%s" $FILES/$flat_fname)" == "0" ]]; then
                     wget --progress=dot:giga -c $flat_url -O $FILES/$flat_fname
                 fi
                 image="$FILES/${flat_fname}"
@@ -227,7 +227,7 @@ function upload_image {
             fi
             image_name="${flat_fname}"
             vmdk_disktype="preallocated"
-        elif [[ "$vmdk_create_type" = "streamOptimized" ]]; then
+        elif [[ "$vmdk_create_type" == "streamOptimized" ]]; then
             vmdk_disktype="streamOptimized"
         elif [[ -z "$vmdk_create_type" ]]; then
             # *-flat.vmdk provided: attempt to retrieve the descriptor (*.vmdk)
@@ -244,7 +244,7 @@ function upload_image {
                                 `" Attempt to retrieve the descriptor *.vmdk: $descriptor_url"
                 if [[ $flat_path != file* ]]; then
                     if [[ ! -f $FILES/$descriptor_fname || \
-                    "$(stat -c "%s" $FILES/$descriptor_fname)" = "0" ]]; then
+                    "$(stat -c "%s" $FILES/$descriptor_fname)" == "0" ]]; then
                         wget -c $descriptor_url -O $FILES/$descriptor_fname
                     fi
                     descriptor_url="$FILES/$descriptor_fname"
@@ -414,12 +414,12 @@ function upload_image {
         img_property="$img_property hw_machine_type=virt hw_cdrom_bus=scsi hw_scsi_model=virtio-scsi os_command_line='console=ttyAMA0'"
     fi
 
-    if [ "$container_format" = "bare" ]; then
-        if [ "$unpack" = "zcat" ]; then
+    if [ "$container_format" == "bare" ]; then
+        if [ "$unpack" == "zcat" ]; then
             _upload_image "$image_name" $container_format $disk_format <(zcat --force "$image") $img_property
-        elif [ "$unpack" = "bunzip2" ]; then
+        elif [ "$unpack" == "bunzip2" ]; then
             _upload_image "$image_name" $container_format $disk_format <(bunzip2 -cdk "$image") $img_property
-        elif [ "$unpack" = "unxz" ]; then
+        elif [ "$unpack" == "unxz" ]; then
             # NOTE(brtknr): unxz the file first and cleanup afterwards to
             # prevent timeout while Glance tries to upload image (e.g. to Swift).
             local tmp_dir
@@ -504,7 +504,7 @@ function wait_for_compute {
         ID=""
         while [[ "\$ID" == "" ]]; do
             sleep 1
-            if [[ "$VIRT_DRIVER" = 'fake' ]]; then
+            if [[ "$VIRT_DRIVER" == 'fake' ]]; then
                 # When using the fake driver the compute hostnames have a suffix of 1 to NUMBER_FAKE_NOVA_COMPUTE
                 ID=\$(openstack --os-cloud devstack-admin --os-region "$REGION_NAME" compute service list --host `hostname`1 --service nova-compute -c ID -f value)
             else
@@ -568,7 +568,7 @@ function get_instance_ip {
 
     addresses=$(openstack server show -c addresses -f value "$vm_id")
     ip=$(echo $addresses | sed -n "s/^.*$network_name=\([0-9\.]*\).*$/\1/p")
-    if [[ $ip = "" ]];then
+    if [[ $ip == "" ]];then
         echo "addresses of server $vm_id : $addresses"
         die $LINENO "[Fail] Couldn't get ipaddress of VM"
     fi
@@ -623,7 +623,7 @@ function check_path_perm_sanity {
     for i in $(echo ${real_path} | tr "/" " "); do
         rebuilt_path=$rebuilt_path"/"$i
 
-        if [[ $(stat -c '%a' ${rebuilt_path}) = 700 ]]; then
+        if [[ $(stat -c '%a' ${rebuilt_path}) == 700 ]]; then
             echo "*** DEST path element"
             echo "***    ${rebuilt_path}"
             echo "*** appears to have 0700 permissions."
@@ -660,23 +660,23 @@ function vercmp {
 
     case $op in
         "==")
-            [ "$v1" = "$v2" ]
+            [ "$v1" == "$v2" ]
             return
             ;;
         ">")
-            [ "$v1" != "$v2" ] && [ "$result" = "$v2" ]
+            [ "$v1" != "$v2" ] && [ "$result" == "$v2" ]
             return
             ;;
         "<")
-            [ "$v1" != "$v2" ] && [ "$result" = "$v1" ]
+            [ "$v1" != "$v2" ] && [ "$result" == "$v1" ]
             return
             ;;
         ">=")
-            [ "$result" = "$v2" ]
+            [ "$result" == "$v2" ]
             return
             ;;
         "<=")
-            [ "$result" = "$v1" ]
+            [ "$result" == "$v1" ]
             return
             ;;
         *)
@@ -840,7 +840,7 @@ function set_systemd_override {
 function get_random_port {
     read lower_port upper_port < /proc/sys/net/ipv4/ip_local_port_range
     while true; do
-        for (( port = upper_port ; port >= lower_port ; port-- )); do
+        for (( port == upper_port ; port >= lower_port ; port-- )); do
             sudo lsof -i ":$port" &> /dev/null
             if [[ $? > 0 ]] ; then
                 break 2

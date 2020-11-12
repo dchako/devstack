@@ -240,7 +240,7 @@ if [ $MODE != "create" ]; then
     # looks like I can't ask for all project related to a specified user
     openstack project list --long --quote none -f csv | grep ',True' | grep -v "${SKIP_PROJECT}" | while IFS=, read project_id project_name desc enabled; do
         openstack user list --project $project_id --long --quote none -f csv | grep ',True' | while IFS=, read user_id user_name project email enabled; do
-            if [ $MODE = one -a "$user_name" != "$USER_NAME" ]; then
+            if [ $MODE == one -a "$user_name" != "$USER_NAME" ]; then
                 continue;
             fi
 

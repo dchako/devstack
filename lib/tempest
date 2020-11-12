@@ -152,7 +152,7 @@ function configure_tempest {
 
     if is_service_enabled glance; then
         while read -r IMAGE_NAME IMAGE_UUID; do
-            if [ "$IMAGE_NAME" = "$DEFAULT_IMAGE_NAME" ]; then
+            if [ "$IMAGE_NAME" ==  "$DEFAULT_IMAGE_NAME" ]; then
                 image_uuid="$IMAGE_UUID"
                 image_uuid_alt="$IMAGE_UUID"
             fi
@@ -318,7 +318,7 @@ function configure_tempest {
     fi
 
     # Identity Features
-    if [[ "$KEYSTONE_SECURITY_COMPLIANCE_ENABLED" = True ]]; then
+    if [[ "$KEYSTONE_SECURITY_COMPLIANCE_ENABLED" ==  True ]]; then
         iniset $TEMPEST_CONFIG identity-feature-enabled security_compliance True
     fi
 
@@ -346,7 +346,7 @@ function configure_tempest {
     if [[ ! -z "$TEMPEST_HTTP_IMAGE" ]]; then
         iniset $TEMPEST_CONFIG image http_image $TEMPEST_HTTP_IMAGE
     fi
-    if [ "$VIRT_DRIVER" = "xenserver" ]; then
+    if [ "$VIRT_DRIVER" ==  "xenserver" ]; then
         iniset $TEMPEST_CONFIG image disk_formats "ami,ari,aki,vhd,raw,iso"
     fi
     iniset $TEMPEST_CONFIG image-feature-enabled import_image $GLANCE_USE_IMPORT_WORKFLOW
@@ -423,7 +423,7 @@ function configure_tempest {
     iniset $TEMPEST_CONFIG network-feature-enabled port_security $NEUTRON_PORT_SECURITY
 
     # Scenario
-    if [ "$VIRT_DRIVER" = "xenserver" ]; then
+    if [ "$VIRT_DRIVER" ==  "xenserver" ]; then
         SCENARIO_IMAGE_DIR=${SCENARIO_IMAGE_DIR:-$FILES}
         SCENARIO_IMAGE_FILE="cirros-${CIRROS_VERSION}-${CIRROS_ARCH}-disk.vhd.tgz"
         iniset $TEMPEST_CONFIG scenario img_disk_format vhd
@@ -466,7 +466,7 @@ function configure_tempest {
     iniset $TEMPEST_CONFIG volume-feature-enabled manage_volume $(trueorfalse False TEMPEST_VOLUME_MANAGE_VOLUME)
     # Only turn on TEMPEST_EXTEND_ATTACHED_VOLUME by default for "lvm" backends
     # in Cinder and the libvirt driver in Nova.
-    if [[ "$CINDER_ENABLED_BACKENDS" == *"lvm"* ]] && [ "$VIRT_DRIVER" = "libvirt" ]; then
+    if [[ "$CINDER_ENABLED_BACKENDS" == *"lvm"* ]] && [ "$VIRT_DRIVER" ==  "libvirt" ]; then
         TEMPEST_EXTEND_ATTACHED_VOLUME=${TEMPEST_EXTEND_ATTACHED_VOLUME:-True}
     fi
     iniset $TEMPEST_CONFIG volume-feature-enabled extend_attached_volume $(trueorfalse False TEMPEST_EXTEND_ATTACHED_VOLUME)
@@ -501,7 +501,7 @@ function configure_tempest {
 
     # Using ``CINDER_ENABLED_BACKENDS``
     # Cinder uses a comma separated list with "type:backend_name":
-    #  CINDER_ENABLED_BACKENDS = ceph:cephBE1,lvm:lvmBE2,foo:my_foo
+    #  CINDER_ENABLED_BACKENDS ==  ceph:cephBE1,lvm:lvmBE2,foo:my_foo
     if [[ -n "$CINDER_ENABLED_BACKENDS" ]] && [[ $CINDER_ENABLED_BACKENDS =~ .*,.* ]]; then
         # We have at least 2 backends
         iniset $TEMPEST_CONFIG volume-feature-enabled multi_backend "True"
@@ -509,7 +509,7 @@ function configure_tempest {
         local backends_list=''
         local be
         # Tempest uses a comma separated list of backend_names:
-        #   backend_names = BACKEND_1,BACKEND_2
+        #   backend_names ==  BACKEND_1,BACKEND_2
         for be in ${CINDER_ENABLED_BACKENDS//,/ }; do
             if [ "$add_comma_seperator" -eq "1" ]; then
                 backends_list+=,${be##*:}
@@ -550,7 +550,7 @@ function configure_tempest {
     fi
 
     # Baremetal
-    if [ "$VIRT_DRIVER" = "ironic" ] ; then
+    if [ "$VIRT_DRIVER" ==  "ironic" ] ; then
         iniset $TEMPEST_CONFIG compute-feature-enabled change_password False
         iniset $TEMPEST_CONFIG compute-feature-enabled console_output False
         iniset $TEMPEST_CONFIG compute-feature-enabled interface_attach False
@@ -564,9 +564,9 @@ function configure_tempest {
     fi
 
     # Libvirt
-    if [ "$VIRT_DRIVER" = "libvirt" ]; then
+    if [ "$VIRT_DRIVER" ==  "libvirt" ]; then
         # Libvirt-LXC
-        if [ "$LIBVIRT_TYPE" = "lxc" ]; then
+        if [ "$LIBVIRT_TYPE" ==  "lxc" ]; then
             iniset $TEMPEST_CONFIG compute-feature-enabled rescue False
             iniset $TEMPEST_CONFIG compute-feature-enabled resize False
             iniset $TEMPEST_CONFIG compute-feature-enabled shelve False
@@ -597,7 +597,7 @@ function configure_tempest {
         fi
     done
 
-    if [ "$VIRT_DRIVER" = "libvirt" ] && [ "$LIBVIRT_TYPE" = "lxc" ]; then
+    if [ "$VIRT_DRIVER" ==  "libvirt" ] && [ "$LIBVIRT_TYPE == = "lxc" ]; then
         # libvirt-lxc does not support boot from volume or attaching volumes
         # so basically anything with cinder is out of the question.
         iniset $TEMPEST_CONFIG service_available cinder "False"

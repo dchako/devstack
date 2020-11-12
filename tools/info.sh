@@ -20,7 +20,7 @@ function usage {
     exit 1
 }
 
-if [ "$1" = "-h" ]; then
+if [ "$1" == "-h" ]; then
     usage
 fi
 
@@ -85,9 +85,9 @@ done
 # - Parse version info from the package metadata, not the package/file names
 
 for p in $(get_packages $ENABLED_SERVICES); do
-    if [[ "$os_PACKAGE" = "deb" ]]; then
+    if [[ "$os_PACKAGE" == "deb" ]]; then
         ver=$(dpkg -s $p 2>/dev/null | grep '^Version: ' | cut -d' ' -f2)
-    elif [[ "$os_PACKAGE" = "rpm" ]]; then
+    elif [[ "$os_PACKAGE" == "rpm" ]]; then
         ver=$(rpm -q --queryformat "%{VERSION}-%{RELEASE}\n" $p)
     else
         exit_distro_not_supported "finding version of a package"

@@ -135,7 +135,7 @@ EOF
     add_user_to_group $STACK_USER $LIBVIRT_GROUP
 
     # Enable server side traces for libvirtd
-    if [[ "$DEBUG_LIBVIRT" = "True" ]] ; then
+    if [[ "$DEBUG_LIBVIRT" == "True" ]] ; then
         if is_ubuntu; then
             # Unexpectedly binary package builds in ubuntu get fully qualified
             # source file paths, not relative paths. This screws with the matching

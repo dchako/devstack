@@ -35,7 +35,7 @@ else
 fi
 
 bash -c "source $TOP/functions; X=`true`; die_if_not_set $LINENO X 'OK'" > /dev/null 2>&1
-if [[ $? = 0 ]]; then
+if [[ $? == 0 ]]; then
     failed "die_if_not_set [X='' true] Failed"
 fi
 
@@ -47,7 +47,7 @@ else
 fi
 
 bash -c "source $TOP/functions; X=`false`; die_if_not_set $LINENO X 'OK'" > /dev/null 2>&1
-if [[ $? = 0 ]]; then
+if [[ $? == 0 ]]; then
     failed "die_if_not_set [X='' false] Failed"
 fi
 
@@ -63,7 +63,7 @@ function test_enable_service {
 
     ENABLED_SERVICES="$start"
     enable_service $add
-    if [ "$ENABLED_SERVICES" = "$finish" ]; then
+    if [ "$ENABLED_SERVICES" == "$finish" ]; then
         passed "OK: $start + $add -> $ENABLED_SERVICES"
     else
         failed "changing $start to $finish with $add failed: $ENABLED_SERVICES"
@@ -89,7 +89,7 @@ function test_disable_service {
 
     ENABLED_SERVICES="$start"
     disable_service "$del"
-    if [ "$ENABLED_SERVICES" = "$finish" ]; then
+    if [ "$ENABLED_SERVICES" == "$finish" ]; then
         passed "OK: $start - $del -> $ENABLED_SERVICES"
     else
         failed "changing $start to $finish with $del failed: $ENABLED_SERVICES"
@@ -129,7 +129,7 @@ function test_disable_negated_services {
 
     ENABLED_SERVICES="$start"
     disable_negated_services
-    if [ "$ENABLED_SERVICES" = "$finish" ]; then
+    if [ "$ENABLED_SERVICES" == "$finish" ]; then
         passed "OK: $start + $add -> $ENABLED_SERVICES"
     else
         failed "changing $start to $finish failed: $ENABLED_SERVICES"
@@ -161,7 +161,7 @@ function test_remove_disabled_services {
     local expected="$3"
 
     results=$(remove_disabled_services "$service_list" "$remove_list")
-    if [ "$results" = "$expected" ]; then
+    if [ "$results" == "$expected" ]; then
         passed "OK: '$service_list' - '$remove_list' -> '$results'"
     else
         failed "getting '$expected' from '$service_list' - '$remove_list' failed: '$results'"
@@ -184,10 +184,10 @@ if [[ -z "$os_PACKAGE" ]]; then
     GetOSVersion
 fi
 
-if [[ "$os_PACKAGE" = "deb" ]]; then
+if [[ "$os_PACKAGE" == "deb" ]]; then
     is_package_installed dpkg
     VAL=$?
-elif [[ "$os_PACKAGE" = "rpm" ]]; then
+elif [[ "$os_PACKAGE" == "rpm" ]]; then
     is_package_installed rpm
     VAL=$?
 else
@@ -199,10 +199,10 @@ else
     failed "is_package_installed() on existing package failed"
 fi
 
-if [[ "$os_PACKAGE" = "deb" ]]; then
+if [[ "$os_PACKAGE" == "deb" ]]; then
     is_package_installed dpkg bash
     VAL=$?
-elif [[ "$os_PACKAGE" = "rpm" ]]; then
+elif [[ "$os_PACKAGE" == "rpm" ]]; then
     is_package_installed rpm bash
     VAL=$?
 else
@@ -273,7 +273,7 @@ function test_export_proxy_variables {
     export_proxy_variables
     expected=$(echo -e "http_proxy=$http_proxy\nhttps_proxy=$https_proxy\nno_proxy=$no_proxy")
     results=$(env | egrep '(http(s)?|no)_proxy=' | sort)
-    if [[ $expected = $results ]]; then
+    if [[ $expected == $results ]]; then
         passed "OK: Proxy variables are exported when proxy variables are set"
     else
         failed "Expected: $expected, Failed: $results"
@@ -282,7 +282,7 @@ function test_export_proxy_variables {
     unset http_proxy https_proxy no_proxy
     export_proxy_variables
     results=$(env | egrep '(http(s)?|no)_proxy=')
-    if [[ "" = $results ]]; then
+    if [[ "" == $results ]]; then
         passed "OK: Proxy variables aren't exported when proxy variables aren't set"
     else
         failed "Expected: '', Failed: $results"

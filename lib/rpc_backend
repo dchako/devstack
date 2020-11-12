@@ -174,7 +174,7 @@ function rabbit_setuser {
     out=$(sudo rabbitmqctl list_users) ||
         { echo "failed to list users" 1>&2; return 1; }
     found=$(echo "$out" | awk '$1 == user { print $1 }' "user=$user")
-    if [ "$found" = "$user" ]; then
+    if [ "$found" ==  "$user" ]; then
         sudo rabbitmqctl change_password "$user" "$pass" ||
             { echo "failed changing pass for '$user'" 1>&2; return 1; }
     else

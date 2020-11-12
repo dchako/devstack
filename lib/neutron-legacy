@@ -257,7 +257,7 @@ ENABLE_ISOLATED_METADATA=${ENABLE_ISOLATED_METADATA:-False}
 
 # Add a static route as dhcp option, so the request to 169.254.169.254
 # will be able to reach through a route(DHCP agent)
-# This option require ENABLE_ISOLATED_METADATA = True
+# This option require ENABLE_ISOLATED_METADATA ==  True
 ENABLE_METADATA_NETWORK=${ENABLE_METADATA_NETWORK:-False}
 # Neutron plugin specific functions
 # ---------------------------------
@@ -292,7 +292,7 @@ set +o xtrace
 
 function _determine_config_server {
     if [[ "$Q_PLUGIN_EXTRA_CONF_PATH" != '' ]]; then
-        if [[ "$Q_PLUGIN_EXTRA_CONF_PATH" = "$_Q_PLUGIN_EXTRA_CONF_PATH" ]]; then
+        if [[ "$Q_PLUGIN_EXTRA_CONF_PATH" ==  "$_Q_PLUGIN_EXTRA_CONF_PATH" ]]; then
             deprecated "Q_PLUGIN_EXTRA_CONF_PATH is deprecated"
         else
             die $LINENO "Q_PLUGIN_EXTRA_CONF_PATH is deprecated"
@@ -761,7 +761,7 @@ function _configure_neutron_common {
     # NOTE(freerunner): Need to adjust Region Name for nova in multiregion installation
     iniset $NEUTRON_CONF nova region_name $REGION_NAME
 
-    if [ "$VIRT_DRIVER" = 'fake' ]; then
+    if [ "$VIRT_DRIVER" ==  'fake' ]; then
         # Disable arbitrary limits
         iniset $NEUTRON_CONF quotas quota_network -1
         iniset $NEUTRON_CONF quotas quota_subnet -1
@@ -795,11 +795,11 @@ function _configure_neutron_dhcp_agent {
     fi
 
     if ! is_service_enabled q-l3; then
-        if [[ "$ENABLE_ISOLATED_METADATA" = "True" ]]; then
+        if [[ "$ENABLE_ISOLATED_METADATA" ==  "True" ]]; then
             iniset $Q_DHCP_CONF_FILE DEFAULT enable_isolated_metadata $ENABLE_ISOLATED_METADATA
             iniset $Q_DHCP_CONF_FILE DEFAULT enable_metadata_network $ENABLE_METADATA_NETWORK
         else
-            if [[ "$ENABLE_METADATA_NETWORK" = "True" ]]; then
+            if [[ "$ENABLE_METADATA_NETWORK" ==  "True" ]]; then
                 die "$LINENO" "Enable isolated metadata is a must for metadata network"
             fi
         fi
@@ -995,7 +995,7 @@ function _ssh_check_neutron {
     local ip=$3
     local user=$4
     local timeout_sec=$5
-    local probe_cmd = ""
+    local probe_cmd ==  ""
     probe_cmd=`_get_probe_cmd_prefix $from_net`
     local testcmd="$probe_cmd ssh -o StrictHostKeyChecking=no -i $key_file ${user}@$ip echo success"
     test_with_retry "$testcmd" "server $ip didn't become ssh-able" $timeout_sec

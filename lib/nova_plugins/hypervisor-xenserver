@@ -47,7 +47,7 @@ function configure_nova_hypervisor {
     local plugin
     local found=0
     for plugin in ${plugins//,/ }; do
-        if [[ "$plugin" = "os-xenapi" ]]; then
+        if [[ "$plugin" == "os-xenapi" ]]; then
             found=1
             break
         fi

@@ -93,7 +93,7 @@ export OS_AUTH_URL=${OS_AUTH_URL:-$KEYSTONE_SERVICE_URI}
 
 # Currently, in order to use openstackclient with Identity API v3,
 # we need to set the domain which the user and project belong to.
-if [ "$OS_IDENTITY_API_VERSION" = "3" ]; then
+if [ "$OS_IDENTITY_API_VERSION" == "3" ]; then
     export OS_USER_DOMAIN_ID=${OS_USER_DOMAIN_ID:-"default"}
     export OS_PROJECT_DOMAIN_ID=${OS_PROJECT_DOMAIN_ID:-"default"}
 fi

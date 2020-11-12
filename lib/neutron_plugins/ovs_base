@@ -97,7 +97,7 @@ function _neutron_ovs_base_configure_firewall_driver {
 
 function _neutron_ovs_base_configure_l3_agent {
     neutron-ovs-cleanup --config-file $NEUTRON_CONF
-    if [[ "$Q_USE_PUBLIC_VETH" = "True" ]]; then
+    if [[ "$Q_USE_PUBLIC_VETH" == "True" ]]; then
         ip link show $Q_PUBLIC_VETH_INT > /dev/null 2>&1 ||
         sudo ip link add $Q_PUBLIC_VETH_INT type veth \
             peer name $Q_PUBLIC_VETH_EX

@@ -40,7 +40,7 @@ GITDIR["keystonemiddleware"]=$DEST/keystonemiddleware
 KEYSTONE_DIR=$DEST/keystone
 
 # Keystone virtual environment
-if [[ ${USE_VENV} = True ]]; then
+if [[ ${USE_VENV} == True ]]; then
     PROJECT_VENV["keystone"]=${KEYSTONE_DIR}.venv
     KEYSTONE_BIN_DIR=${PROJECT_VENV["keystone"]}/bin
 else
@@ -178,7 +178,7 @@ function _config_keystone_apache_wsgi {
         keystone_service_port=$KEYSTONE_SERVICE_PORT_INT
         keystone_auth_port=$KEYSTONE_AUTH_PORT_INT
     fi
-    if [[ ${USE_VENV} = True ]]; then
+    if [[ ${USE_VENV} == True ]]; then
         venv_path="python-path=${PROJECT_VENV["keystone"]}/lib/$(python_version)/site-packages"
     fi
 
@@ -276,7 +276,7 @@ function configure_keystone {
     #iniset $KEYSTONE_CONF resource admin_project_domain_name Default
     #iniset $KEYSTONE_CONF resource admin_project_name admin
 
-    if [[ "$KEYSTONE_SECURITY_COMPLIANCE_ENABLED" = True ]]; then
+    if [[ "$KEYSTONE_SECURITY_COMPLIANCE_ENABLED" == True ]]; then
         iniset $KEYSTONE_CONF security_compliance lockout_failure_attempts $KEYSTONE_LOCKOUT_FAILURE_ATTEMPTS
         iniset $KEYSTONE_CONF security_compliance lockout_duration $KEYSTONE_LOCKOUT_DURATION
         iniset $KEYSTONE_CONF security_compliance unique_last_password_count $KEYSTONE_UNIQUE_LAST_PASSWORD_COUNT

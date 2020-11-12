@@ -633,7 +633,7 @@ function read_password {
             echo "Enter a password now:"
             read -e $var
             pw=${!var}
-            [[ "$pw" = "`echo $pw | tr -cd [:alnum:]`" ]] && break
+            [[ "$pw" == "`echo $pw | tr -cd [:alnum:]`" ]] && break
             echo "Invalid chars in password.  Try again:"
         done
         if [ ! $pw ]; then
@@ -946,7 +946,7 @@ install_oscwrap
 # ------
 
 if [[ $SYSLOG != "False" ]]; then
-    if [[ "$SYSLOG_HOST" = "$HOST_IP" ]]; then
+    if [[ "$SYSLOG_HOST" == "$HOST_IP" ]]; then
         # Configure the master host to receive
         cat <<EOF | sudo tee /etc/rsyslog.d/90-stack-m.conf >/dev/null
 \$ModLoad imrelp

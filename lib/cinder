@@ -43,7 +43,7 @@ GITDIR["python-brick-cinderclient-ext"]=$DEST/python-brick-cinderclient-ext
 CINDER_DIR=$DEST/cinder
 
 # Cinder virtual environment
-if [[ ${USE_VENV} = True ]]; then
+if [[ ${USE_VENV} == True ]]; then
     PROJECT_VENV["cinder"]=${CINDER_DIR}.venv
     CINDER_BIN_DIR=${PROJECT_VENV["cinder"]}/bin
 else
@@ -146,7 +146,7 @@ function _cinder_cleanup_apache_wsgi {
 function cleanup_cinder {
     # ensure the volume group is cleared up because fails might
     # leave dead volumes in the group
-    if [ "$CINDER_ISCSI_HELPER" = "tgtadm" ]; then
+    if [ "$CINDER_ISCSI_HELPER" == "tgtadm" ]; then
         local targets
         targets=$(sudo tgtadm --op show --mode target)
         if [ $? -ne 0 ]; then
@@ -459,7 +459,7 @@ function start_cinder {
         service_port=$CINDER_SERVICE_PORT_INT
         service_protocol="http"
     fi
-    if [ "$CINDER_ISCSI_HELPER" = "tgtadm" ]; then
+    if [ "$CINDER_ISCSI_HELPER" == "tgtadm" ]; then
         if is_service_enabled c-vol; then
             # Delete any old stack.conf
             sudo rm -f /etc/tgt/conf.d/stack.conf

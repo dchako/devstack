@@ -243,7 +243,7 @@ function create_neutron_initial_network {
             EXTERNAL_NETWORK_FLAGS="$EXTERNAL_NETWORK_FLAGS --default"
         fi
         # Create an external network, and a subnet. Configure the external network as router gw
-        if [ "$Q_USE_PROVIDERNET_FOR_PUBLIC" = "True" ]; then
+        if [ "$Q_USE_PROVIDERNET_FOR_PUBLIC" == "True" ]; then
             EXT_NET_ID=$(openstack --os-cloud devstack-admin --os-region "$REGION_NAME" network create "$PUBLIC_NETWORK_NAME" $EXTERNAL_NETWORK_FLAGS --provider-network-type ${PUBLIC_PROVIDERNET_TYPE:-flat} ${PUBLIC_PROVIDERNET_SEGMENTATION_ID:+--provider-segment $PUBLIC_PROVIDERNET_SEGMENTATION_ID} --provider-physical-network ${PUBLIC_PHYSICAL_NETWORK} | grep ' id ' | get_field 2)
         else
             EXT_NET_ID=$(openstack --os-cloud devstack-admin --os-region "$REGION_NAME" network create "$PUBLIC_NETWORK_NAME" $EXTERNAL_NETWORK_FLAGS | grep ' id ' | get_field 2)
@@ -350,10 +350,10 @@ function _neutron_configure_router_v4 {
         local ext_gw_interface="none"
         if is_neutron_ovs_base_plugin; then
             ext_gw_interface=$(_neutron_get_ext_gw_interface)
-        elif [[ "$Q_AGENT" = "linuxbridge" ]]; then
+        elif [[ "$Q_AGENT" == "linuxbridge" ]]; then
             # Get the device the neutron router and network for $FIXED_RANGE
             # will be using.
-            if [ "$Q_USE_PROVIDERNET_FOR_PUBLIC" = "True" ]; then
+            if [ "$Q_USE_PROVIDERNET_FOR_PUBLIC" == "True" ]; then
                 # in provider nets a bridge mapping uses the public bridge directly
                 ext_gw_interface=$PUBLIC_BRIDGE
             else

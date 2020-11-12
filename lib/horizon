@@ -44,7 +44,7 @@ function _horizon_config_set {
 
     if [ -z "$section" ]; then
         sed -e "/^$option/d" -i $file
-        echo "$option = $value" >> $file
+        echo "$option ==  $value" >> $file
     elif grep -q "^$section" $file; then
         local line
         line=$(sed -ne "/^$section/,/^}/ { /^ *'$option':/ p; }" $file)
@@ -54,7 +54,7 @@ function _horizon_config_set {
             sed -i -e "/^$section/a\    '$option': $value," $file
         fi
     else
-        echo -e "\n\n$section = {\n    '$option': $value,\n}" >> $file
+        echo -e "\n\n$section ==  {\n    '$option': $value,\n}" >> $file
     fi
 }
 

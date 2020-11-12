@@ -75,9 +75,9 @@ function configure_database_postgresql {
         exit_distro_not_supported "postgresql configuration"
     fi
     # Listen on all addresses
-    sudo sed -i "/listen_addresses/s/.*/listen_addresses = '*'/" $pg_conf
+    sudo sed -i "/listen_addresses/s/.*/listen_addresses == '*'/" $pg_conf
     # Set max_connections
-    sudo sed -i "/max_connections/s/.*/max_connections = $MAX_DB_CONNECTIONS/" $pg_conf
+    sudo sed -i "/max_connections/s/.*/max_connections == $MAX_DB_CONNECTIONS/" $pg_conf
     # Do password auth from all IPv4 clients
     sudo sed -i "/^host/s/all\s\+127.0.0.1\/32\s\+ident/$DATABASE_USER\t0.0.0.0\/0\tpassword/" $pg_hba
     # Do password auth for all IPv6 clients

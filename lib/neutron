@@ -217,7 +217,7 @@ function configure_neutron_new {
         iniset $NEUTRON_CORE_PLUGIN_CONF ml2 tenant_network_types $NEUTRON_TENANT_NETWORK_TYPE
 
         local mech_drivers="openvswitch"
-        if [[ "$NEUTRON_DISTRIBUTED_ROUTING" = "True" ]]; then
+        if [[ "$NEUTRON_DISTRIBUTED_ROUTING" ==  "True" ]]; then
             mech_drivers+=",l2population"
         else
             mech_drivers+=",linuxbridge"
@@ -229,7 +229,7 @@ function configure_neutron_new {
         if [[ "$NEUTRON_TENANT_NETWORK_TYPE" =~ "vlan" ]] && [[ "$NEUTRON_PHYSICAL_NETWORK" != "" ]]; then
             iniset $NEUTRON_CORE_PLUGIN_CONF ml2_type_vlan network_vlan_ranges ${NEUTRON_PHYSICAL_NETWORK}:${NEUTRON_TENANT_VLAN_RANGE}
         fi
-        if [[ "$NEUTRON_PORT_SECURITY" = "True" ]]; then
+        if [[ "$NEUTRON_PORT_SECURITY" ==  "True" ]]; then
             neutron_ml2_extension_driver_add port_security
         fi
     fi
@@ -248,7 +248,7 @@ function configure_neutron_new {
             iniset $NEUTRON_CORE_PLUGIN_CONF securitygroup firewall_driver openvswitch
             iniset $NEUTRON_CORE_PLUGIN_CONF ovs local_ip $HOST_IP
 
-            if [[ "$NEUTRON_DISTRIBUTED_ROUTING" = "True" ]]; then
+            if [[ "$NEUTRON_DISTRIBUTED_ROUTING" ==  "True" ]]; then
                 iniset $NEUTRON_CORE_PLUGIN_CONF agent l2_population True
                 iniset $NEUTRON_CORE_PLUGIN_CONF agent enable_distributed_routing True
                 iniset $NEUTRON_CORE_PLUGIN_CONF agent arp_responder True
@@ -288,7 +288,7 @@ function configure_neutron_new {
             iniset $NEUTRON_CORE_PLUGIN_CONF ovs bridge_mappings "$PUBLIC_NETWORK_NAME:$PUBLIC_BRIDGE"
         fi
 
-        if [[ "$NEUTRON_DISTRIBUTED_ROUTING" = "True" ]]; then
+        if [[ "$NEUTRON_DISTRIBUTED_ROUTING" ==  "True" ]]; then
             iniset $NEUTRON_L3_CONF DEFAULT agent_mode $NEUTRON_DVR_MODE
         fi
     fi

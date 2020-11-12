@@ -36,7 +36,7 @@ GITDIR["os-vif"]=$DEST/os-vif
 NOVA_DIR=$DEST/nova
 
 # Nova virtual environment
-if [[ ${USE_VENV} = True ]]; then
+if [[ ${USE_VENV} == True ]]; then
     PROJECT_VENV["nova"]=${NOVA_DIR}.venv
     NOVA_BIN_DIR=${PROJECT_VENV["nova"]}/bin
 else
@@ -168,7 +168,7 @@ function is_nova_enabled {
 # is_nova_console_proxy_compute_tls_enabled() - Test if the Nova Console Proxy
 # service has TLS enabled
 function is_nova_console_proxy_compute_tls_enabled {
-    [[ ${NOVA_CONSOLE_PROXY_COMPUTE_TLS} = "True" ]] && return 0
+    [[ ${NOVA_CONSOLE_PROXY_COMPUTE_TLS} == "True" ]] && return 0
     return 1
 }
 
@@ -194,7 +194,7 @@ function cleanup_nova {
         # Destroy old instances
         local instances
         instances=`sudo virsh list --all | grep $INSTANCE_NAME_PREFIX | sed "s/.*\($INSTANCE_NAME_PREFIX[0-9a-fA-F]*\).*/\1/g"`
-        if [ ! "$instances" = "" ]; then
+        if [ ! "$instances" == "" ]; then
             echo $instances | xargs -n1 sudo virsh destroy || true
             if ! xargs -n1 sudo virsh undefine --managed-save --nvram <<< $instances; then
                 # Can't delete with nvram flags, then just try without this flag
@@ -246,7 +246,7 @@ function configure_nova {
         # Force IP forwarding on, just on case
         sudo sysctl -w net.ipv4.ip_forward=1
 
-        if [[ "$VIRT_DRIVER" = 'libvirt' ]]; then
+        if [[ "$VIRT_DRIVER" == 'libvirt' ]]; then
             # Check for kvm (hardware based virtualization).  If unable to initialize
             # kvm, we drop back to the slower emulation mode (qemu).  Note: many systems
             # come with hardware virtualization disabled in BIOS.
@@ -808,7 +808,7 @@ function install_nova {
     if is_service_enabled n-novnc; then
         # a websockets/html5 or flash powered VNC console for vm instances
         NOVNC_FROM_PACKAGE=$(trueorfalse False NOVNC_FROM_PACKAGE)
-        if [ "$NOVNC_FROM_PACKAGE" = "True" ]; then
+        if [ "$NOVNC_FROM_PACKAGE" == "True" ]; then
             NOVNC_WEB_DIR=/usr/share/novnc
             install_package novnc
         else
@@ -820,7 +820,7 @@ function install_nova {
     if is_service_enabled n-spice; then
         # a websockets/html5 or flash powered SPICE console for vm instances
         SPICE_FROM_PACKAGE=$(trueorfalse True SPICE_FROM_PACKAGE)
-        if [ "$SPICE_FROM_PACKAGE" = "True" ]; then
+        if [ "$SPICE_FROM_PACKAGE" == "True" ]; then
             SPICE_WEB_DIR=/usr/share/spice-html5
             install_package spice-html5
         else
@@ -906,16 +906,16 @@ function start_nova_compute {
     # by the compute process.
     configure_console_compute
 
-    if [[ "$VIRT_DRIVER" = 'libvirt' ]]; then
+    if [[ "$VIRT_DRIVER" == 'libvirt' ]]; then
         # The group **$LIBVIRT_GROUP** is added to the current user in this script.
         # ``sg`` is used in run_process to execute nova-compute as a member of the
         # **$LIBVIRT_GROUP** group.
         run_process n-cpu "$NOVA_BIN_DIR/nova-compute --config-file $NOVA_CPU_CONF" $LIBVIRT_GROUP
-    elif [[ "$VIRT_DRIVER" = 'lxd' ]]; then
+    elif [[ "$VIRT_DRIVER" == 'lxd' ]]; then
         run_process n-cpu "$NOVA_BIN_DIR/nova-compute --config-file $NOVA_CPU_CONF" $LXD_GROUP
-    elif [[ "$VIRT_DRIVER" = 'docker' || "$VIRT_DRIVER" = 'zun' ]]; then
+    elif [[ "$VIRT_DRIVER" == 'docker' || "$VIRT_DRIVER" == 'zun' ]]; then
         run_process n-cpu "$NOVA_BIN_DIR/nova-compute --config-file $NOVA_CPU_CONF" $DOCKER_GROUP
-    elif [[ "$VIRT_DRIVER" = 'fake' ]]; then
+    elif [[ "$VIRT_DRIVER" == 'fake' ]]; then
         local i
         for i in `seq 1 $NUMBER_FAKE_NOVA_COMPUTE`; do
             # Avoid process redirection of fake host configurations by
